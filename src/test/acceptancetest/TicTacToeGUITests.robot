@@ -1,15 +1,33 @@
 *** Settings ***
-Library    keywords.TicTacToeKeywords
+Library          SwingLibrary
 
 *** Keywords ***
-Check Location   [Arguments]   ${row}    ${col}    ${mark}
-    ${m}=   Get Mark    ${row}    ${col}
-	Should Be Equal    ${m}    ${mark}    
+Start New 3x3 Game
+    Start Application   edu.jsu.mcis.TicTacToe
+    Select Window       Tic-Tac-Toe
 
-Winner Should Be   [Arguments]       ${mark}
-    ${m}=   Get Winner
-	Should Be Equal    ${m}    ${mark}    
+Start New 5x5 Game
+    Start Application   edu.jsu.mcis.TicTacToe  5
+    Select Window       Tic-Tac-Toe
 
+Start New 7x7 Game
+    Start Application   edu.jsu.mcis.TicTacToe  7
+    Select Window       Tic-Tac-Toe
+
+Mark Location   [Arguments]     ${row}      ${col}
+    ${component}=   Catenate    SEPARATOR=  Square    ${row}  ${col}
+    Click On Component  ${component}
+
+Check Location  [Arguments]     ${row}  ${col}  ${mark}
+    ${component}=   Catenate    SEPARATOR=  Square    ${row}  ${col}
+	${text}=    Get Button Text   ${component}
+    Should Be Equal    ${text}    ${mark}
+    
+Winner Should Be    [Arguments]     ${winner}
+	${text}=    Get Label Content    ResultLabel
+    Should Be Equal    ${text}    ${winner}
+    Close Window    Tic-Tac-Toe
+    
 *** Test Cases ***
 Win Diagonally as X (3x3)
     Start New 3x3 Game
